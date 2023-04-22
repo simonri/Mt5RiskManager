@@ -11,6 +11,7 @@ int OnInit() {
    ExtDialog = new CRiskManager;
 
    if (!ExtDialog.Create(0, "Risk Manager (ver. " + Version + ")", 0, 0, 0)) return INIT_FAILED;
+   ExtDialog.Run();
    
    return(INIT_SUCCEEDED);
 }
