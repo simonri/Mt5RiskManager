@@ -6,7 +6,9 @@
 
 class CRiskManager : public CAppDialog {
 private:
-  string m_FileName;
+  string fileName;
+  double dpiScale;
+  int panelWidth;
 
 public:
   CRiskManager(void);
@@ -14,6 +16,7 @@ public:
 
   void UpdateFileName(void);
   void InitVariables(void);
+  virtual bool Create(const long chart, const string name, const int subwin, const int x1, const int y1);
 };
 
 CRiskManager::CRiskManager(void) {
@@ -24,9 +27,23 @@ CRiskManager::CRiskManager(void) {
 CRiskManager::~CRiskManager(void) {}
 
 void CRiskManager::UpdateFileName(void) {
-  m_FileName = "RiskManager_" + Symbol() + IntegerToString(ChartID());
-  StringReplace(m_FileName, ".", "_dot_");
-  m_FileName += ".txt";
+  fileName = "RiskManager_" + Symbol() + IntegerToString(ChartID());
+  StringReplace(fileName, ".", "_dot_");
+  fileName += ".txt";
 }
 
 void CRiskManager::InitVariables(void) { }
+
+bool CRiskManager::Create(const long chart, const string name, const int subwin, const int x1, const int y1) {
+  double screenDpi = (double) TerminalInfoInteger(TERMINAL_SCREEN_DPI);
+  dpiScale = screenDpi / 96.0;
+
+  panelWidth = 350;
+
+  int x2 = x1 + (int) MathRound(panelWidth * dpiScale);
+  int y2 = y1 + (int) MathRound(570 * dpiScale);
+
+  if (!CAppDialog::Create(chart, name, subwin, x1, y1, x2, y2)) return false;
+
+  return true;
+}
